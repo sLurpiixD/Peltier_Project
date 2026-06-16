@@ -96,7 +96,6 @@ void IRAM_ATTR tachISR() {
     uint32_t now     = micros();
     uint32_t elapsed = now - lastPulse_us;
 
-    // 3ms debounce — limits max readable to ~10,000 RPM, filters noise
     if (elapsed > 3000) {
         periodHistory[filterIdx] = elapsed;
         filterIdx = (filterIdx + 1) % FILTER_SIZE;
@@ -117,7 +116,6 @@ void setup() {
     ambientSensor.setWaitForConversion(false);
     ambientSensor.requestTemperatures();
 
-    // arduino-esp32 v2.x channel-based LEDC API
     ledcSetup(0, PWM_FREQ, PWM_RESOLUTION);
     ledcAttachPin(FAN_PWM_PIN, 0);
     ledcWrite(0, (uint32_t)currentPWM);
